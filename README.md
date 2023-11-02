@@ -100,7 +100,7 @@ fasttext==0.9.2
 
 #### 2. Filter using blacklist and regular expression matching.
 
-* run python clear_ccnet.py
+- run python clear_ccnet.py
 
 ```sh
 python clear_ccnet.py --source /mnt/data/ccnet_clean/cc_net/data/mined_split/2023-23 --target /mnt/data/cc_cleaned
@@ -108,7 +108,7 @@ python clear_ccnet.py --source /mnt/data/ccnet_clean/cc_net/data/mined_split/202
 # --target directory of data filtered by blacklist and regular expression matching
 ```
 
-* outputs:
+- outputs:
 
 ```sh
 cleared*.jsonl
@@ -122,6 +122,7 @@ tar -czvf ccnet-2023-23.tar.gz 2023-23
 ```
 
 ### Stage 2:  Preprocessing
+
 This section focuses on extracting high-quality texts from Chinese monolingual web data by using manually crafted rules to filter out violent, pornographic, advertising content, and erroneous characters. The details of the filtering rules are presented in the following:
 
 - #### Text Extraction
@@ -150,7 +151,7 @@ Here is an example command to run the preprocessing stage:
 python preprocess.py --dates 2023-06 2023-14
 ```
 
-> The **"dates"** parameter passed in corresponds to the folder names of the snapshots generated during the preparation stage. 
+> The **"dates"** parameter passed in corresponds to the folder names of the snapshots generated during the preparation stage.
 >
 > Then, you will get six subfolders under the corresponding date's folder. These six folders are respectively named **"text_extraction"**, **"length"**,  **"Character"**, **"sensitive"**, **"duplication"** and **"remain"**. The **"text_extraction"** folder contains the results after extracting text from each piece of data, while **"length"**,  **"Character"**, **"sensitive"**, and **"duplication"** correspond to four filtering operations, storing the filtered noise data. The **"remain"** folder stores the remaining data after the preprocessing stage, and these data will subsequently be scored through our evaluation model.
 

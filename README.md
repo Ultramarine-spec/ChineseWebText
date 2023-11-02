@@ -1,24 +1,24 @@
 # ChineseWebText: Large-Scale High-quality Chinese Web Text Extracted with Effective Evaluation Model
 
-This directory contains the ChineseWebText dataset, and the EvalWeb tool-chain to process CommonCrawl Data for high-quality chinese data. Our ChineseWebText dataset is publicly available on  .
+This directory contains the ChineseWebText dataset, and the EvalWeb tool-chain to process CommonCrawl Data for high-quality chinese data. Our ChineseWebText dataset is publicly available on.
 
-# ChineseWebText 
+## ChineseWebText
 
 - ### Dataset Overview
 
 We release the latest and largest Chinese dataset **ChineseWebText**, which consists of **1.42 TB** (See Table 1) data and each text is assigned a quality score, facilitating LLM researchers to select data according to a new quality threshold. We also release a much cleaner subset of **600 GB** Chinese texts with quality exceeding **90%** .
 
-<img src=".\assets\Overview_of_output_datasets.png" style="zoom: 67%;" />
+<img src=".\assets\Overview_of_output_datasets.png" style="zoom: 40%;" />
 
 - ### Data Example
 
   ```json
   {
-  	"title": "潍坊银行2021年上半年净利润同比增长29.57% 不良率降至1.10%_财经_中国网",
-      "score": 0.95,
-      "text": "潍坊银行2021年上半年净利润同比增长29.57% 不良率降至1.10%\n中国网财经8月24日讯 潍坊银行昨日披露2021年二季度信息报告显示，截至2021			年6月末，潍坊银行资产总额1920.44亿元，较上年末增长9.34%；负债总额1789.16亿元，较上年末增长10.54%。2021年上半年，潍坊银行实现净利润			6.09亿元，同比增长29.57%。\n资产质量方面，截至2021年6月末，潍坊银行不良贷款率1.10%，较上年末下降0.13个百分点。\n资本金方面，截至				2021年6月末，潍坊银行资本充足率、核心一级资本充足率、一级资本充足率分别为11.66%、7.89%、10.13%，分别较上年末下降1.89、0.89、1.15			个百分点。",
-      "url": "http://finance.china.com.cn/news/special/2021bnb/20210824/5638343.shtml",
-      "source\_domain": "finance.china.com.cn"
+    "title": "潍坊银行2021年上半年净利润同比增长29.57% 不良率降至1.10%_财经_中国网",
+    "score": 0.95,
+    "text": "潍坊银行2021年上半年净利润同比增长29.57% 不良率降至1.10%\n中国网财经8月24日讯 潍坊银行昨日披露2021年二季度信息报告显示，截至2021年6月末，潍坊银行资产总额1920.44亿元，较上年末增长9.34%；负债总额1789.16亿元，较上年末增长10.54%。2021年上半年，潍坊银行实现净利润6.09亿元，同比增长29.57%。\n资产质量方面，截至2021年6月末，潍坊银行不良贷款率1.10%，较上年末下降0.13个百分点。\n资本金方面，截至2021年6月末，潍坊银行资本充足率、核心一级资本充足率、一级资本充足率分别为11.66%、7.89%、10.13%，分别较上年末下降1.89、0.89、1.15个百分点。",
+    "url": "http://finance.china.com.cn/news/special/2021bnb/20210824/5638343.shtml",
+    "source_domain": "finance.china.com.cn"
   }
   ```
 
@@ -28,15 +28,13 @@ We release the latest and largest Chinese dataset **ChineseWebText**, which cons
   - "url":  【string】External URL, points to the original web address of the text.
   - "source_domain": 【string】The domain name of the source website.
 
-# EvalWeb
+## EvalWeb
 
 ### Introduction
 
 We introduce a new complete tool-chain **EvalWeb** (See Figure 1), which could extract high-quality Chinese texts from raw web data.  For the crawled data from web, we first use a preparation module to process them, and then extract the monolingual Chinese data. After that, a preprocessing module will be used to further filter them with mannual crafted rules, including data length, sensitive words, proportion of Chinese characters and so on. Finally, a BERT-based evaluation model will be employed to assess the qualities of filtered data. By this way, we can generate a quality score for each of the text, and then use an appropriate threshold to extract the high-quality data as we required. Furthermore, considering computational cost and efficiency, we also propose to leverage knowledge distillation techniques to train a FastText classifier, which can achieve similar performance with faster efficiency and lower computational costs.
 
-​																							![](.\assets\BERTEval.png)
-
-​																								<i>Figure 1: The architecture of our EvalWeb approach</i>
+​![](.\assets\BERTEval.png)
 
 ### Environment Dependencies
 
@@ -55,50 +53,50 @@ fasttext==0.9.2
 
 #### 1. Deduplication and Language Identification (LID) using CCNet Tools
 
-* Following the work of CCNet, in this module a Hash-based inter-string deduplication method is employed to remove duplicate text from different CommonCrawl snapshots.  Additionally, a well-trained language identification model, which could support 157 languages, is applied to select Chinese data. By this way, we can obtain all the monolingual Chinese text data we required.
+- Following the work of CCNet, in this module a Hash-based inter-string deduplication method is employed to remove duplicate text from different CommonCrawl snapshots.  Additionally, a well-trained language identification model, which could support 157 languages, is applied to select Chinese data. By this way, we can obtain all the monolingual Chinese text data we required.
 
-* [CCNet Tools](https://github.com/facebookresearch/cc_net)
+- [CCNet Tools](https://github.com/facebookresearch/cc_net)
 
-* Run the script:
+- Run the script:
 
   ```shell
    python -m cc_net --config config/my_config_2023-23.json。
   ```
 
-*  Outputs:
+- Outputs:
 
   ```shell
   /data/mined_split/2023-23/{0-4999}/zh_[head|middle|tail].json.gz
   ```
 
-* config/my_config_2023-23.json：
+- config/my_config_2023-23.json：
 
 ```json
 {
-    "hash_in_mem": 10,
-    "dump": "2023-23",
-    "task_parallelism": 20,
-    "num_shards": 5000,
-    "mine_num_processes": 20,
-    "num_segments_per_shard":-1,
-    "lang_whitelist": ["zh","en"],
-    "lang_blacklist": [],
-    "lang_threshold": 0.5,
-    "keep_bucket": [],
-    "pipeline": ["dedup", "lid", "keep_lang", "sp", "lm", "pp_bucket", "drop", "split_by_lang"],
-    "metadata": "None",
-    "execution": "local",
-    "output_dir": "data",
-    "mined_dir": "mined",
-    "target_size": "4G",
-    "min_len": 300,
-    "cache_dir": "/mnt/data/ccnet_data/commoncrawl"
+  "hash_in_mem": 10,
+  "dump": "2023-23",
+  "task_parallelism": 20,
+  "num_shards": 5000,
+  "mine_num_processes": 20,
+  "num_segments_per_shard":-1,
+  "lang_whitelist": ["zh","en"],
+  "lang_blacklist": [],
+  "lang_threshold": 0.5,
+  "keep_bucket": [],
+  "pipeline": ["dedup", "lid", "keep_lang", "sp", "lm", "pp_bucket", "drop", "split_by_lang"],
+  "metadata": "None",
+  "execution": "local",
+  "output_dir": "data",
+  "mined_dir": "mined",
+  "target_size": "4G",
+  "min_len": 300,
+  "cache_dir": "/mnt/data/ccnet_data/commoncrawl"
 }
 ```
 
 #### 2. Filter using blacklist and regular expression matching.
 
-* run python clear_ccnet.py 
+* run python clear_ccnet.py
 
 ```sh
 python clear_ccnet.py --source /mnt/data/ccnet_clean/cc_net/data/mined_split/2023-23 --target /mnt/data/cc_cleaned
@@ -160,7 +158,7 @@ In preprocessing procedure, we have used some handcrafted rules to remove the ex
 
 #### 1. BERTEval Training Data Composition
 
-<img src=".\assets\BERTEval_data_composition.png" style="zoom:67%;" />
+<img src=".\assets\BERTEval_data_composition.png" style="zoom:40%;" />
 
 #### 2. BERTEval Training and Inference
 
@@ -207,7 +205,7 @@ In preprocessing procedure, we have used some handcrafted rules to remove the ex
 
 #### 1. FastText Training Data Composition：
 
-<img src=".\assets\FastText_data_composition.png" style="zoom:67%;" />
+<img src=".\assets\FastText_data_composition.png" style="zoom:40%;" />
 
 ### 2. FastText Training and Inference
 
@@ -229,4 +227,3 @@ python main.py --mode test --dates 2023-06 2023-14
 ```
 
 > This step will assign a FastText score to each data entry, with the results being stored in a directory such as **"./2023-06/remain/fasttext"**. Subsequently, you can utilize these scores to filter and extract high-quality data by using a threshold(default set to 0.5).
-

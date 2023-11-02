@@ -8,7 +8,9 @@ This directory contains the ChineseWebText dataset, and the EvalWeb tool-chain t
 
 We release the latest and largest Chinese dataset **ChineseWebText**, which consists of **1.42 TB** (See Table 1) data and each text is assigned a quality score, facilitating LLM researchers to select data according to a new quality threshold. We also release a much cleaner subset of **600 GB** Chinese texts with quality exceeding **90%** .
 
-<img src=".\assets\Overview_of_output_datasets.png" width="50%" />
+<div align="center">
+  <img src=".\assets\Overview_of_output_datasets.png" width="50%" />
+</div>
 
 - ### Data Example
 
@@ -34,7 +36,9 @@ We release the latest and largest Chinese dataset **ChineseWebText**, which cons
 
 We introduce a new complete tool-chain **EvalWeb** (See Figure 1), which could extract high-quality Chinese texts from raw web data.  For the crawled data from web, we first use a preparation module to process them, and then extract the monolingual Chinese data. After that, a preprocessing module will be used to further filter them with mannual crafted rules, including data length, sensitive words, proportion of Chinese characters and so on. Finally, a BERT-based evaluation model will be employed to assess the qualities of filtered data. By this way, we can generate a quality score for each of the text, and then use an appropriate threshold to extract the high-quality data as we required. Furthermore, considering computational cost and efficiency, we also propose to leverage knowledge distillation techniques to train a FastText classifier, which can achieve similar performance with faster efficiency and lower computational costs.
 
-<img src=".\assets\BERTEval.png" width="50%" />
+<div align="center">
+  <img src=".\assets\BERTEval.png"/>
+</div>
 
 ### Environment Dependencies
 
@@ -158,7 +162,9 @@ In preprocessing procedure, we have used some handcrafted rules to remove the ex
 
 #### 1. BERTEval Training Data Composition
 
-<img src=".\assets\BERTEval_data_composition.png" width="50%" />
+<div align="center">
+  <img src=".\assets\BERTEval_data_composition.png" width="50%" />
+</div>
 
 #### 2. BERTEval Training and Inference
 
@@ -199,13 +205,13 @@ In preprocessing procedure, we have used some handcrafted rules to remove the ex
   selected_data = text_select_with_pred(file, score_threshold)
   ```
 
-
-
 ### Stage 3.2:  FastText
 
-#### 1. FastText Training Data Composition：
+#### 1. FastText Training Data Composition
 
-<img src=".\assets\FastText_data_composition.png" width="50%" />
+<div align="center">
+  <img src=".\assets\FastText_data_composition.png" width="50%" />
+</div>
 
 ### 2. FastText Training and Inference
 
